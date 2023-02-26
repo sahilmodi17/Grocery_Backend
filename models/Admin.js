@@ -1,19 +1,11 @@
 const mongoose = require("mongoose");
+// const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken")
-require("dotenv").config()
 
-const UserSchema = new mongoose.Schema({
-  firstName: {
+const AdminSchema = new mongoose.Schema({
+  name: {
     type: String,
-    required: [true, "Please provide first name"],
-    trim: true,
-    minlength: 3,
-  },
-  
-  lastName: {
-    type: String,
-    required: [true, "please provide last name"],
+    required: [true, "please provide name"],
     trim: true,
     minlength: 3,
   },
@@ -21,7 +13,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: [true, "Please provide email"],
+    required: [true, "please provide email"],
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       "Please provide valid email",
@@ -40,7 +32,9 @@ const UserSchema = new mongoose.Schema({
     length: 10,
   },
 
-  
+  image: {
+    type : String,
+  },
 });
 
 
@@ -49,14 +43,4 @@ const UserSchema = new mongoose.Schema({
 //     this.password = await bcrypt.hash(this.password, salt);
 // })
 
-UserSchema.methods.createToken = function(){
-    return jwt.sign(
-      { userId: this._id, email: this.email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.JWT_LIFETIME,
-      }
-    );
-  }
-
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("Admin", AdminSchema);

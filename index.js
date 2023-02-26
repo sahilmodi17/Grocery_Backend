@@ -3,10 +3,16 @@ const app = express();
 require("dotenv").config();
 const connectDB = require("./db/connect")
 
+
 const PORT = 5000 || process.env.PORT;
 
 
+const auth = require("./routes/auth")
+
 app.use(express.json());
+
+
+app.use('/api/v1/auth', auth);
 
 
 const start = async () => {
