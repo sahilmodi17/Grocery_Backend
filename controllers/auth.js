@@ -12,7 +12,45 @@ const adminLogin = async (req, res) => {
 };
 
 const userLogin = async (req, res) => {
-  res.json({ msg: "user login called" });
+  const {email, password} = req.body;
+  try{
+            
+    const user = await User.findOne({email: email});
+    
+    if(!user){
+        return res.status(404).json({"status" : "email invalid"});
+    }
+
+    const dbPassword = user.password;
+    console.log(dbPassword)
+    console.log(password)
+    
+    bcrypt.compare(password, dbPassword, (err, data) => {
+        if(err){
+            return res.status(404).json({"status": "something went wrong"});
+        }
+console.log(data)
+
+        if(data){
+            const token = user.createToken();
+            console.log("login token : " + token);
+            res.cookie("token", token, {
+                expires: new Date(Date.now() + ( 30 * 24 * 60 * 60 * 1000)), // ms
+                httpOnly: true
+            })
+
+            return res.status(200).json({"status": "login successful for user", token});
+        }
+        else{
+            return res.status(404).json({"status": "invalid password"});
+        }
+    })
+
+}
+catch(err){
+    console.log(err);
+    res.json(err);
+}
 };
 
 const userRegister = async (req, res) => {
