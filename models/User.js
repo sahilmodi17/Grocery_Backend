@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     minlength: 3,
   },
-  
+   
   lastName: {
     type: String,
     required: [true, "please provide last name"],
